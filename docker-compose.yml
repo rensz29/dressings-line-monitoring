@@ -1,0 +1,19 @@
+services:
+  linemonitor:
+    build: .
+    image: linemonitor:latest
+    container_name: linemonitor
+    ports:
+      - "5230:8080"          # browse the app at http://localhost:5230
+    volumes:
+      - linemonitor-config:/data   # OPC UA endpoint + tag map persist here
+    restart: unless-stopped
+    # The container must be able to reach your OPC UA server (e.g. the plant
+    # Kepware at opc.tcp://10.156.116.1:49320) over the host network. Default
+    # bridge networking allows this outbound. If the server is only reachable
+    # from the host itself, uncomment host networking (Linux only) and drop
+    # the "ports" mapping above:
+    # network_mode: host
+
+volumes:
+  linemonitor-config:

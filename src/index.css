@@ -1,0 +1,130 @@
+@import "tailwindcss";
+
+/* ============================================================================
+   DESIGN TOKENS — premium dark industrial control-room theme.
+   Tailwind 4 CSS-first config: every token below is also a utility
+   (bg-surface-1, text-status-run, shadow-e2, rounded-lg, ...).
+============================================================================ */
+@theme {
+  --font-sans: "Inter Variable", "Segoe UI Variable", system-ui, sans-serif;
+  --font-mono: ui-monospace, "JetBrains Mono", "Consolas", monospace;
+
+  /* backgrounds */
+  --color-bg-base: #0a0e14;
+  --color-bg-deep: #06090d;
+  --color-surface-1: #101623;
+  --color-surface-2: #151d2c;
+  --color-surface-3: #1b2536;
+  --color-glass: rgb(21 29 44 / 0.66);
+
+  /* borders */
+  --color-border-subtle: #1e2838;
+  --color-border-line: #293449;
+  --color-border-strong: #38455e;
+
+  /* text tiers */
+  --color-text-hi: #eef3f9;
+  --color-text-mid: #9ba9bc;
+  --color-text-low: #5e6c80;
+
+  /* accents */
+  --color-accent-blue: #4c9aff;
+  --color-accent-cyan: #22d3ee;
+
+  /* status colors — desaturated for 12-hour viewing comfort */
+  --color-status-run: #34d399;
+  --color-status-wait: #fbbf24;
+  --color-status-blocked: #a78bfa;
+  --color-status-stop: #f25555;
+  --color-status-nodata: #5b6674;
+  --color-status-offline: #3b4453;
+  --color-status-info: #38bdf8;
+
+  /* glows */
+  --color-glow-run: rgb(52 211 153 / 0.35);
+  --color-glow-wait: rgb(251 191 36 / 0.35);
+  --color-glow-blocked: rgb(167 139 250 / 0.35);
+  --color-glow-stop: rgb(242 85 85 / 0.45);
+
+  /* elevation */
+  --shadow-e1: 0 1px 2px rgb(0 0 0 / 0.4);
+  --shadow-e2: 0 2px 8px rgb(0 0 0 / 0.45), inset 0 1px 0 rgb(255 255 255 / 0.03);
+  --shadow-e3: 0 8px 24px rgb(0 0 0 / 0.5);
+  --shadow-e4: 0 16px 48px rgb(0 0 0 / 0.6);
+
+  /* radius */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.625rem;
+  --radius-lg: 0.875rem;
+  --radius-xl: 1.25rem;
+}
+
+/* ============================================================================
+   ROOT SCALING — the whole board is sized in rem; scaling the root font
+   scales every panel proportionally from 1080p TVs up to 4K walls.
+   0.8333vw → 16px @ 1920, 21.3px @ 2560, 32px @ 3840.
+============================================================================ */
+html {
+  font-size: clamp(11px, 0.8333vw, 34px);
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+body {
+  background:
+    radial-gradient(80rem 30rem at 50% -8%, #121a28 0%, var(--color-bg-base) 60%);
+  color: var(--color-text-hi);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ============================================================================
+   ANIMATIONS — compositor-only (transform/opacity), safe for 24/7 TVs.
+============================================================================ */
+@keyframes an-breath {
+  0%, 100% { opacity: 0.45; transform: scale(1); }
+  50% { opacity: 0.9; transform: scale(1.06); }
+}
+@keyframes an-pulse {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 0.85; }
+}
+@keyframes an-heartbeat {
+  0%, 28%, 70%, 100% { transform: scale(1); }
+  14% { transform: scale(1.18); }
+  42% { transform: scale(1.12); }
+}
+@keyframes an-ripple {
+  0% { transform: scale(0.9); opacity: 0.8; }
+  100% { transform: scale(2.3); opacity: 0; }
+}
+@keyframes an-conn {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+@keyframes an-slide-in {
+  from { opacity: 0; transform: translateY(-0.375rem); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes an-drawer {
+  from { transform: translateX(100%); }
+  to { transform: none; }
+}
+@keyframes an-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
