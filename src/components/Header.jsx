@@ -1,5 +1,6 @@
-import { Factory, Settings } from "lucide-react";
+import { Settings } from "lucide-react";
 import { fmtTime, fmtDate, shiftForHour } from "../utils/format.js";
+import unileverLogo from "../assets/unilever-logo.png";
 import ConnectionStatus from "./ConnectionStatus.jsx";
 import HealthRing from "./HealthRing.jsx";
 
@@ -13,8 +14,8 @@ export default function Header({ now, connected, links, factoryHealth, onOpenSet
     <header className="flex h-[4rem] shrink-0 items-center justify-between gap-[1rem] border-b border-border-subtle bg-glass px-[1.125rem] shadow-e1 backdrop-blur-md">
       {/* identity */}
       <div className="flex min-w-0 items-center gap-[0.75rem]">
-        <span className="flex size-[2rem] shrink-0 items-center justify-center rounded-md bg-gradient-to-br from-accent-blue to-accent-cyan shadow-e1">
-          <Factory style={{ width: "1.25rem", height: "1.25rem" }} className="text-bg-deep" strokeWidth={2} />
+        <span className="flex h-[3.25rem] shrink-0 items-center justify-center rounded-md bg-white px-[0.625rem] shadow-e1">
+          <img src={unileverLogo} alt="Unilever" className="h-[2.85rem] w-auto" />
         </span>
         <span className="min-w-0">
           <span className="block truncate text-[1.25rem] leading-tight font-extrabold tracking-[0.12em]">
