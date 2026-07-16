@@ -6,27 +6,27 @@ import Sparkline from "./Sparkline.jsx";
 import StatusIndicator from "./StatusIndicator.jsx";
 
 /* ============================================================================
-   LINE CARD — one production line. Healthy lines stay calm; a line whose
-   worst machine is STOPPED (or BLOCKED/WAITING) gets an accent border + glow
-   so it pulls the eye from across the room. Cards never re-order: operators
-   map board position to floor position.
+   LINE CARD — one production line. The card glow reflects the line's balance:
+   GREEN when more machines are running than stopped, RED when more are stopped
+   than running, and calm when the two are tied (or the line has no data).
+   Cards never re-order: operators map board position to floor position.
 ============================================================================ */
-const ATTENTION = {
-  STOPPED: { border: "var(--color-status-stop)", shadow: "0 0 1.25rem var(--color-glow-stop), var(--shadow-e2)" },
-  BLOCKED: { border: "var(--color-status-blocked)", shadow: "0 0 1rem var(--color-glow-blocked), var(--shadow-e2)" },
-  WAITING: { border: "var(--color-status-wait)", shadow: "var(--shadow-e2)" },
+const GLOW = {
+  green: { border: "var(--color-status-run)", shadow: "0 0 1.25rem var(--color-glow-run), var(--shadow-e2)" },
+  red: { border: "var(--color-status-stop)", shadow: "0 0 1.25rem var(--color-glow-stop), var(--shadow-e2)" },
 };
 
 export default function LineCard({ line, statuses, metrics, sim, now, onClick, maxRows }) {
   const worst = metrics.worst;
-  const attn = ATTENTION[worst];
+  const { RUNNING, STOPPED } = metrics.counts;
+  const glow = RUNNING > STOPPED ? GLOW.green : STOPPED > RUNNING ? GLOW.red : null;
 
   return (
     <div
       className="flex min-w-0 flex-1 flex-col overflow-hidden rounded-lg border bg-surface-1"
       style={{
-        borderColor: attn ? attn.border : "var(--color-border-subtle)",
-        boxShadow: attn?.shadow || "var(--shadow-e2)",
+        borderColor: glow ? glow.border : "var(--color-border-subtle)",
+        boxShadow: glow?.shadow || "var(--shadow-e2)",
       }}
     >
       {/* nameplate */}
