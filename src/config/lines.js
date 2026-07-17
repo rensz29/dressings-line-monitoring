@@ -14,16 +14,6 @@ export const LINE_DEFS = {
     { type: "Xray", label: "X-Ray" },
     { type: "Case Sealer", label: "Case Sealer" },
   ]},
-  // bottlenh: { name: "BOTTLE NH", machines: [
-  //   { type: "Depalletizer", label: "Depalletizer" },
-  //   { type: "Filler", label: "Filler" },
-  //   { type: "Capper", label: "Capper" },
-  //   { type: "SOB", label: "SOB" },
-  //   { type: "Check Weigher", label: "Check Weigher" },
-  //   { type: "Shrink Tunnel", label: "Shrink Tunnel" },
-  //   { type: "Autocaser", label: "Autocaser" },
-  //   { type: "Case Sealer", label: "Case Sealer" },
-  // ]},
   linea: { name: "LINE A", machines: [
     { type: "Filler", label: "Filler" },
     { type: "Capper", label: "Capper" },
@@ -74,20 +64,51 @@ export const LINE_DEFS = {
     { type: "Filler", label: "Filler" },
     { type: "Case Sealer", label: "Case Sealer" },
   ]},
+  /* ── NON HALAL ── */
+  bottlenh: { name: "BOTTLE NH", machines: [
+    { type: "Depalletizer", label: "Depalletizer" },
+    { type: "Filler", label: "Filler" },
+    { type: "Capper", label: "Capper" },
+    { type: "Check Weigher", label: "Check Weigher" },
+    { type: "SOB", label: "SOB" },
+    { type: "Shrink Tunnel", label: "Shrink Tunnel" },
+    { type: "Autocaser", label: "Autocaser" },
+    { type: "Case Sealer", label: "Case Sealer" },
+  ]},
+  akashnh: { name: "AKASH NH", machines: [
+    { type: "Filler", label: "Akash Filler" },
+    { type: "Case Sealer", label: "Case Sealer" },
+  ]},
   // doynh: { name: "DOY NH", machines: [
   //   { type: "Filler", label: "Filler" },
   //   { type: "Case Sealer", label: "Case Sealer" },
   // ]},
-  // akashnh: { name: "AKASH NH", machines: [
-  //   { type: "Filler", label: "Akash Line" },
-  // ]},
 };
 
-/* Two rows, grouped by line length so box sizes stay uniform per row. */
-export const ROWS = [
-  ["lineb", "linea", "serac", "boatopack", "boatopack2"], // longest: 9
-  ["toyo", "ilapak", "volpak", "c1"],                                 // longest: 5
+/* ============================================================================
+   BOARD GROUPS — each group renders as its own labeled section; rows are
+   grouped by line length so box sizes stay uniform per row. Row membership
+   is fixed in code; the persisted layout (server config.json) only reorders
+   cards WITHIN a row.
+============================================================================ */
+export const GROUPS = [
+  { id: "halal", name: "HALAL", rows: [
+    ["lineb", "linea", "serac", "boatopack", "boatopack2"], // longest: 9
+    ["toyo", "ilapak", "volpak", "c1"],                     // longest: 5
+  ]},
+  { id: "nonhalal", name: "NON HALAL", rows: [
+    ["bottlenh"], // 8 machines — sized against board row-0 max (9)
+    ["akashnh"],  // 2 machines — sized against board row-1 max (5)
+  ]},
 ];
+
+/* Per-row-index machine max across ALL groups so machine boxes align
+   board-wide regardless of which group a line sits in. */
+export const ROW_MAXES = Array.from(
+  { length: Math.max(...GROUPS.map((g) => g.rows.length)) },
+  (_, ri) => Math.max(...GROUPS.flatMap((g) => g.rows[ri] || [])
+    .map((id) => LINE_DEFS[id].machines.length)),
+);
 
 export const LINES = Object.entries(LINE_DEFS).map(([id, d]) => ({ id, ...d }));
 export const TOTAL_MACHINES = LINES.reduce((n, ln) => n + ln.machines.length, 0);

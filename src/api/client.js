@@ -21,12 +21,13 @@ export function discoverTags(connection) {
   return request("/opcua/discover", { method: "POST", body: JSON.stringify(connection) });
 }
 
-/** Load the saved connection + tag map. Returns { connection, tags }. */
+/** Load the saved config. Returns { connection, tags, layout }. */
 export function getConfig() {
   return request("/config");
 }
 
-/** Persist { connection, tags } and restart the bridge subscription. */
+/** Persist any subset of { connection, tags, layout } — omitted sections are
+    preserved server-side. The bridge only restarts when connection/tags change. */
 export function saveConfig(config) {
   return request("/config", { method: "PUT", body: JSON.stringify(config) });
 }

@@ -23,6 +23,7 @@ export const DEFAULT_CONFIG = {
     nsIndex: 2, // default namespace for bare tag addresses (Kepware = 2)
   },
   tags: {}, // { "lineb|Depalletizer": "ns=2;s=Channel.Device.Tag", ... }
+  layout: {}, // board card arrangement: { halal: [["lineb",...],[...]], ... } — opaque to the bridge
 };
 
 export function loadConfig() {
@@ -32,6 +33,7 @@ export function loadConfig() {
     return {
       connection: { ...DEFAULT_CONFIG.connection, ...raw.connection },
       tags: { ...(raw.tags || {}) },
+      layout: { ...(raw.layout || {}) },
     };
   } catch (err) {
     console.error("[config] failed to read config.json, using defaults:", err.message);
@@ -39,10 +41,15 @@ export function loadConfig() {
   }
 }
 
+/* Section-preserving: callers may PUT any subset of {connection, tags, layout}
+   (Settings sends connection+tags, the board sends layout) — omitted sections
+   keep their on-disk value. */
 export function saveConfig(next) {
+  const current = loadConfig();
   const merged = {
-    connection: { ...DEFAULT_CONFIG.connection, ...next.connection },
-    tags: { ...(next.tags || {}) },
+    connection: { ...DEFAULT_CONFIG.connection, ...(next.connection ?? current.connection) },
+    tags: { ...(next.tags ?? current.tags) },
+    layout: { ...(next.layout ?? current.layout) },
   };
   mkdirSync(dirname(CONFIG_PATH), { recursive: true }); // ensure the volume dir exists
   writeFileSync(CONFIG_PATH, JSON.stringify(merged, null, 2));

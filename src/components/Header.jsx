@@ -1,14 +1,44 @@
 import { Settings } from "lucide-react";
+import { STATUS } from "../config/lines.js";
+import { STATUS_ICONS } from "../config/icons.jsx";
 import { fmtTime, fmtDate, shiftForHour } from "../utils/format.js";
 import unileverLogo from "../assets/unilever-logo.png";
 import ConnectionStatus from "./ConnectionStatus.jsx";
 import HealthRing from "./HealthRing.jsx";
 
 /* ============================================================================
-   HEADER — identity left, time center, system state right.
+   HEADER — identity left, time center, status legend + system state right.
    One of only three glass (backdrop-blur) surfaces on the board.
 ============================================================================ */
-export default function Header({ now, connected, links, factoryHealth, onOpenSettings }) {
+
+/* Factory-wide machine counts, one chip per status (icon = shape redundancy,
+   color-blind safe). Zero counts dim so active states pop from a distance. */
+const LEGEND = ["RUNNING", "IDLE", "WAITING", "BLOCKED", "STOPPED", "OFFLINE"];
+
+function StatusLegend({ counts }) {
+  return (
+    <div className="flex items-center gap-[0.125rem] rounded-md border border-border-subtle bg-bg-deep px-[0.375rem] py-[0.3rem]">
+      {LEGEND.map((key) => {
+        const st = STATUS[key];
+        const Icon = STATUS_ICONS[key];
+        const n = counts[key] ?? 0;
+        return (
+          <span
+            key={key}
+            title={`${st.label}: ${n}`}
+            className="flex items-center gap-[0.3rem] rounded-sm px-[0.375rem] py-[0.125rem]"
+            style={{ opacity: n === 0 ? 0.35 : 1 }}
+          >
+            <Icon style={{ width: "0.8125rem", height: "0.8125rem", color: st.color }} strokeWidth={2.5} />
+            <span className="text-[0.9375rem] leading-none font-bold text-text-hi tabular-nums">{n}</span>
+          </span>
+        );
+      })}
+    </div>
+  );
+}
+
+export default function Header({ now, connected, links, counts, factoryHealth, onOpenSettings }) {
   const shift = shiftForHour(new Date(now).getHours());
   return (
     <header className="flex h-[4rem] shrink-0 items-center justify-between gap-[1rem] border-b border-border-subtle bg-glass px-[1.125rem] shadow-e1 backdrop-blur-md">
@@ -36,8 +66,9 @@ export default function Header({ now, connected, links, factoryHealth, onOpenSet
         </span>
       </div>
 
-      {/* system state */}
+      {/* status legend + system state */}
       <div className="flex shrink-0 items-center gap-[0.875rem]">
+        <StatusLegend counts={counts} />
         <ConnectionStatus connected={connected} links={links} />
         <span className="flex items-center gap-[0.375rem]" title="Factory health">
           <HealthRing value={factoryHealth} size={34} strokeWidth={3.5} fontSize={11} />

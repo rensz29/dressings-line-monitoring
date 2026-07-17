@@ -27,6 +27,7 @@ function wsUrl() {
 export function useMachineStatus() {
   const [statuses, setStatuses] = useState(buildInitial);
   const [connected, setConnected] = useState(false);
+  const [remoteLayout, setRemoteLayout] = useState(null); // {type:"layout"} broadcasts
   const wsRef = useRef(null);
 
   useEffect(() => {
@@ -43,6 +44,8 @@ export function useMachineStatus() {
         let u;
         try { u = JSON.parse(ev.data); } catch { return; }
         if (u.type === "link") { setConnected(!!u.connected); return; }
+        if (u.type === "layout") { setRemoteLayout(u.layout || {}); return; }
+        if (u.type || !u.lineId || !u.machineType) return; // unknown shapes must never corrupt statuses
         setStatuses((prev) => ({
           ...prev,
           [keyOf(u.lineId, u.machineType)]: { status: u.status, ts: u.ts },
@@ -75,5 +78,5 @@ export function useMachineStatus() {
     };
   }, []);
 
-  return { statuses, connected };
+  return { statuses, connected, remoteLayout };
 }

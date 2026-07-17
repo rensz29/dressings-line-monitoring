@@ -96,8 +96,18 @@ app.get("/api/config", (_req, res) => {
 });
 
 app.put("/api/config", (req, res) => {
+  const prev = loadConfig();
   const saved = saveConfig(req.body || {});
-  bridge.start(saved).catch((e) => console.error("[bridge] restart failed:", e?.message || e));
+  // Only touch the OPC UA subscription when it's actually affected — a
+  // layout-only save (board drag-and-drop) must not flap the link.
+  const bridgeChanged =
+    JSON.stringify([prev.connection, prev.tags]) !== JSON.stringify([saved.connection, saved.tags]);
+  if (bridgeChanged) {
+    bridge.start(saved).catch((e) => console.error("[bridge] restart failed:", e?.message || e));
+  }
+  if (JSON.stringify(prev.layout) !== JSON.stringify(saved.layout)) {
+    broadcast({ type: "layout", layout: saved.layout }); // live-update other displays
+  }
   res.json(saved);
 });
 

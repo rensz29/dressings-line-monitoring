@@ -5,7 +5,7 @@ import * as api from "../api/client.js";
    CONFIG HOOK — loads the saved connection + tag map from the bridge.
    Used by the Settings page (to edit) and the Drawer (to show real NodeIDs).
 ============================================================================ */
-const EMPTY = { connection: { endpoint: "", securityMode: "None", securityPolicy: "None", username: "", password: "", nsIndex: 2 }, tags: {} };
+const EMPTY = { connection: { endpoint: "", securityMode: "None", securityPolicy: "None", username: "", password: "", nsIndex: 2 }, tags: {}, layout: {} };
 
 export function useConfig() {
   const [config, setConfig] = useState(EMPTY);
