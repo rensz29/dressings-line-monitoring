@@ -99,11 +99,12 @@ export const keyOf = (lineId, type) => `${lineId}|${type}`;
    theme stays in one place. `rank` orders severity for line rollups.
 ============================================================================ */
 export const STATUS = {
-  RUNNING: { label: "RUN",     rank: 0,  color: "var(--color-status-run)",     glow: "var(--color-glow-run)" },
-  WAITING: { label: "WAIT",    rank: 1,  color: "var(--color-status-wait)",    glow: "var(--color-glow-wait)" },
-  BLOCKED: { label: "BLOCKED", rank: 2,  color: "var(--color-status-blocked)", glow: "var(--color-glow-blocked)" },
-  STOPPED: { label: "STOP",    rank: 3,  color: "var(--color-status-stop)",    glow: "var(--color-glow-stop)" },
-  OFFLINE: { label: "NO DATA", rank: -1, color: "var(--color-status-nodata)",  glow: "transparent" },
+  RUNNING: { label: "RUN",     rank: 0,   color: "var(--color-status-run)",     glow: "var(--color-glow-run)" },
+  IDLE:    { label: "IDLE",    rank: -0.5, color: "var(--color-status-idle)",    glow: "var(--color-glow-idle)" },
+  WAITING: { label: "WAIT",    rank: 1,   color: "var(--color-status-wait)",    glow: "var(--color-glow-wait)" },
+  BLOCKED: { label: "BLOCKED", rank: 2,   color: "var(--color-status-blocked)", glow: "var(--color-glow-blocked)" },
+  STOPPED: { label: "STOP",    rank: 3,   color: "var(--color-status-stop)",    glow: "var(--color-glow-stop)" },
+  OFFLINE: { label: "NO DATA", rank: -1,  color: "var(--color-status-nodata)",  glow: "transparent" },
 };
 
 export function lineRollup(line, statuses) {

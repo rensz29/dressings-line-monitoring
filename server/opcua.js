@@ -54,12 +54,12 @@ const PRODUCT_NAME_NODE = "ns=0;i=2261";
 // NUMERIC_MAP decodes the DFOS PLC `iState` integer. Verified 2026-07-16 by
 // reading iState alongside the sibling "Machine Status - Running/Waiting/
 // Blocked/Stopped" booleans on the Line B / All-Fill Fillers & Depalletizer:
-//   0 = idle/undefined (no status boolean true) → OFFLINE
+//   0 = idle (no status boolean true — powered but not producing) → IDLE
 //   1 = Running   2 = Stopped   3 = Waiting (by elimination)   4 = Blocked
 // Adjust here if the PLC's state enumeration changes.
 // ============================================================================
-const STATUS_KEYS = ["RUNNING", "WAITING", "BLOCKED", "STOPPED", "OFFLINE"];
-const NUMERIC_MAP = { 0: "OFFLINE", 1: "RUNNING", 2: "STOPPED", 3: "WAITING", 4: "BLOCKED" };
+const STATUS_KEYS = ["RUNNING", "IDLE", "WAITING", "BLOCKED", "STOPPED", "OFFLINE"];
+const NUMERIC_MAP = { 0: "IDLE", 1: "RUNNING", 2: "STOPPED", 3: "WAITING", 4: "BLOCKED" };
 
 export function mapValueToStatus(raw) {
   if (raw === null || raw === undefined) return "OFFLINE";
@@ -70,7 +70,8 @@ export function mapValueToStatus(raw) {
     const s = raw.trim().toUpperCase();
     if (STATUS_KEYS.includes(s)) return s;
     if (s.startsWith("RUN")) return "RUNNING";
-    if (s.startsWith("WAIT") || s.startsWith("IDLE") || s.startsWith("STARV")) return "WAITING";
+    if (s.startsWith("IDLE")) return "IDLE";
+    if (s.startsWith("WAIT") || s.startsWith("STARV")) return "WAITING";
     if (s.startsWith("BLOCK")) return "BLOCKED";
     if (s.startsWith("STOP") || s.startsWith("FAULT") || s.startsWith("ALARM")) return "STOPPED";
     return "OFFLINE";

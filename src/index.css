@@ -36,6 +36,7 @@
   --color-status-wait: #fbbf24;
   --color-status-blocked: #a78bfa;
   --color-status-stop: #f25555;
+  --color-status-idle: #60a5fa;
   --color-status-nodata: #5b6674;
   --color-status-offline: #3b4453;
   --color-status-info: #38bdf8;
@@ -45,6 +46,7 @@
   --color-glow-wait: rgb(251 191 36 / 0.35);
   --color-glow-blocked: rgb(167 139 250 / 0.35);
   --color-glow-stop: rgb(242 85 85 / 0.45);
+  --color-glow-idle: rgb(96 165 250 / 0.3);
 
   /* elevation */
   --shadow-e1: 0 1px 2px rgb(0 0 0 / 0.4);

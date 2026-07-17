@@ -1,7 +1,7 @@
 import {
   Layers, Wind, Droplets, Disc, Ribbon, Tag, Scale, Flame, Scan,
   PackagePlus, Box, Package, PackageCheck, Cog,
-  Play, Timer, Ban, OctagonX, CircleHelp, PowerOff,
+  Play, Pause, Timer, Ban, OctagonX, CircleHelp, PowerOff,
 } from "lucide-react";
 
 /* Machine icons — keys must match the bridge's machineType strings exactly. */
@@ -26,6 +26,7 @@ export const machineIcon = (type) => MACHINE_ICONS[type] || Cog;
 /* Status icons — shape redundancy so no status relies on color alone. */
 export const STATUS_ICONS = {
   RUNNING: Play,
+  IDLE: Pause,
   WAITING: Timer,
   BLOCKED: Ban,
   STOPPED: OctagonX,

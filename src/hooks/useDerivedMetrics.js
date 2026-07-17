@@ -30,7 +30,7 @@ export function useDerivedMetrics(statuses, now) {
   }, [statuses]);
 
   return useMemo(() => {
-    const counts = { RUNNING: 0, WAITING: 0, BLOCKED: 0, STOPPED: 0, OFFLINE: 0 };
+    const counts = { RUNNING: 0, IDLE: 0, WAITING: 0, BLOCKED: 0, STOPPED: 0, OFFLINE: 0 };
     const perLine = {};
     const faults = [];
     let healthSum = 0;
@@ -38,7 +38,7 @@ export function useDerivedMetrics(statuses, now) {
     let totalDowntime = 0;
 
     LINES.forEach((ln) => {
-      const c = { RUNNING: 0, WAITING: 0, BLOCKED: 0, STOPPED: 0, OFFLINE: 0 };
+      const c = { RUNNING: 0, IDLE: 0, WAITING: 0, BLOCKED: 0, STOPPED: 0, OFFLINE: 0 };
       let ongoingStop = 0;
       let fresh = false;
       ln.machines.forEach((m) => {
@@ -51,7 +51,7 @@ export function useDerivedMetrics(statuses, now) {
         if (st === "STOPPED" || st === "BLOCKED")
           faults.push({ lineId: ln.id, line: ln.name, machine: m.label, status: st, ts: e.ts });
       });
-      const active = ln.machines.length - c.OFFLINE;
+      const active = ln.machines.length - c.OFFLINE - c.IDLE; // idle machines aren't producing, but aren't a fault either
       const health = active === 0
         ? null
         : (100 * (c.RUNNING * HEALTH_WEIGHT.RUNNING + c.WAITING * HEALTH_WEIGHT.WAITING +

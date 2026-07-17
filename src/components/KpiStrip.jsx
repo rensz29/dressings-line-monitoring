@@ -41,7 +41,7 @@ export default function KpiStrip({ counts }) {
     <div className="flex h-[6rem] shrink-0 gap-[0.75rem]">
       <KpiCard
         icon={Play} label="Running" value={counts.RUNNING} color="var(--color-status-run)"
-        sub={`of ${TOTAL_MACHINES} · ${counts.OFFLINE} no data`}
+        sub={`of ${TOTAL_MACHINES} · ${counts.IDLE} idle · ${counts.OFFLINE} no data`}
       />
       <KpiCard icon={OctagonX} label="Stopped" value={counts.STOPPED} color="var(--color-status-stop)" />
       <KpiCard icon={Timer} label="Waiting" value={counts.WAITING} color="var(--color-status-wait)" />
